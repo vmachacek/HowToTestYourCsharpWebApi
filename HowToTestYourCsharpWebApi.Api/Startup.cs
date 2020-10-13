@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using HowToTestYourCsharpWebApi.Api.Adapters;
 using HowToTestYourCsharpWebApi.Api.Database;
+using HowToTestYourCsharpWebApi.Api.ExternalApi;
 using HowToTestYourCsharpWebApi.Api.Ports;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -31,12 +32,15 @@ namespace HowToTestYourCsharpWebApi.Api
         {
             services.AddControllers();
 
-            services.AddDbContext<DatabaseContext>(ctx =>
-            {
-                ctx.UseSqlServer(ConnectionString.It);
-            });
+            services.AddDbContext<DatabaseContext>(ctx => { ctx.UseSqlServer(ConnectionString.It); });
 
             services.AddTransient<IWeatherForecastConfigService, WeatherForecastConfigService>();
+
+            services.AddTransient<CurrencyService>();
+
+            services.AddHttpClient();
+
+            services.AddMemoryCache();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -53,10 +57,7 @@ namespace HowToTestYourCsharpWebApi.Api
 
             app.UseAuthorization();
 
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllers();
-            });
+            app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
 
             using var scope = app.ApplicationServices.CreateScope();
             scope.ServiceProvider.GetRequiredService<DatabaseContext>().Database.Migrate();

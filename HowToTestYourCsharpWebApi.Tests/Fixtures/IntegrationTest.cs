@@ -1,7 +1,12 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using System;
+using Microsoft.Extensions.Configuration;
 using Respawn;
 using System.Net.Http;
 using HowToTestYourCsharpWebApi.Api;
+using HowToTestYourCsharpWebApi.Api.Database;
+using HowToTestYourCsharpWebApi.Tests.Stubs;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 
 namespace HowToTestYourCsharpWebApi.Tests.Fixtures
@@ -17,20 +22,18 @@ namespace HowToTestYourCsharpWebApi.Tests.Fixtures
             WithReseed = true
         };
 
-        protected readonly ApiWebApplicationFactory _factory;
-        protected readonly HttpClient _client;
-        protected readonly IConfiguration _configuration;
+        protected readonly ApiWebApplicationFactory Factory;
+
+        protected readonly HttpClient DefaultClient;
+
 
         public IntegrationTest(ApiWebApplicationFactory fixture)
         {
-            _factory = fixture;
-            _client = _factory.CreateClient();
-            _configuration = new ConfigurationBuilder()
-                .AddJsonFile("integrationsettings.json")
-                .Build();
-
+            Factory = fixture;
+            DefaultClient = fixture.CreateClient();
+            
             //if needed, reset the DB
-            _checkpoint.Reset(ConnectionString.It).Wait();
+            //_checkpoint.Reset(ConnectionString.It).Wait();
         }
     }
 }
