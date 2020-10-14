@@ -8,11 +8,13 @@ using HowToTestYourCsharpWebApi.Api.ExternalApi;
 using HowToTestYourCsharpWebApi.Api.Ports;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
@@ -32,7 +34,7 @@ namespace HowToTestYourCsharpWebApi.Api
         {
             services.AddControllers();
 
-            // services.AddDbContext<DatabaseContext>(ctx => { ctx.UseSqlServer(ConnectionString.It); });
+            services.AddDbContext<DatabaseContext>(ctx => { ctx.UseSqlServer(ConnectionString.It); });
 
             services.AddTransient<IWeatherForecastConfigService, WeatherForecastConfigService>();
 

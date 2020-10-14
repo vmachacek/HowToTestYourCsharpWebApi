@@ -10,9 +10,11 @@ namespace HowToTestYourCsharpWebApi.Tests.Framework
     {
         private Dictionary<string, Action<IWebHostBuilder>> registeredPresets;
 
-        public RunSettingsReader(IEnumerable<RunPreSet> runPresets)
+        public RunSettingsReader(IEnumerable<TestRunPreset> runPresets)
         {
-            this.registeredPresets = runPresets.ToDictionary(f => f.EnvironmentName, f => f.ConfigureAction);
+            this.registeredPresets = new Dictionary<string, Action<IWebHostBuilder>>(
+                runPresets.ToDictionary(f => f.EnvironmentName, f => f.ConfigureAction),
+                StringComparer.OrdinalIgnoreCase);
         }
 
         public void Setup(IWebHostBuilder builder)

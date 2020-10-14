@@ -16,6 +16,7 @@ namespace HowToTestYourCsharpWebApi.Tests.Framework
 
         public static IServiceCollection WithInMemoryDatabase<T>(this IServiceCollection services) where T : DbContext
         {
+            //one DB per all tests
             var runId = Guid.NewGuid().ToString();
             services.AddEntityFrameworkInMemoryDatabase();
             services.AddDbContext<T>((options) => { options.UseInMemoryDatabase(runId); });

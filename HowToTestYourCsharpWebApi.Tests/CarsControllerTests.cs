@@ -5,6 +5,7 @@ using System.Net;
 using System.Threading.Tasks;
 using HowToTestYourCsharpWebApi.Api.Database;
 using HowToTestYourCsharpWebApi.Tests.Fixtures;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using Shouldly;
@@ -21,8 +22,7 @@ namespace HowToTestYourCsharpWebApi.Tests
         [Fact]
         public async Task can_load_all_cars_from_db()
         {
-            var testScope = Factory.Services.CreateScope();
-            var context = testScope.ServiceProvider.GetRequiredService<DatabaseContext>();
+            var context = Factory.Services.CreateScope().ServiceProvider.GetRequiredService<DatabaseContext>();
             var carName = Guid.NewGuid().ToString("D");
             await context.Cars.AddAsync(new Car() {Name = carName});
             await context.SaveChangesAsync();

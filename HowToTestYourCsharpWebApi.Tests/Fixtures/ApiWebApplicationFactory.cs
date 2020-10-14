@@ -11,17 +11,17 @@ namespace HowToTestYourCsharpWebApi.Tests.Fixtures
     {
         protected override void ConfigureWebHost(IWebHostBuilder builder)
         {
-            var presets = new RunPreSet[]
+            var presets = new TestRunPreset[]
             {
                 // for local development we stub our APIs and add InmemoryDB
                 //this can be changed per-test basis when we work on certain aspects
-                new RunPreSet("development", developerSetup),
+                new TestRunPreset("development", developerSetup),
                 
                 //staging should be same as prod
-                new RunPreSet("staging", hostBuilder => { }), 
+                new TestRunPreset("staging", hostBuilder => { }), 
                 
-                //uat with real DB but stubbed out services
-                new RunPreSet("uat", hostBuilder =>
+                //test env -  with real DB but stubbed out services
+                new TestRunPreset("test", hostBuilder =>
                 {
                     hostBuilder.ConfigureServices(services =>
                     {

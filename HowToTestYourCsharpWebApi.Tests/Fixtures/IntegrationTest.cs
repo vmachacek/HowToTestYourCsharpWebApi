@@ -1,5 +1,6 @@
 ﻿using Respawn;
 using System.Net.Http;
+using HowToTestYourCsharpWebApi.Api;
 using Xunit;
 
 namespace HowToTestYourCsharpWebApi.Tests.Fixtures
@@ -18,7 +19,6 @@ namespace HowToTestYourCsharpWebApi.Tests.Fixtures
         protected readonly ApiWebApplicationFactory Factory;
 
         protected readonly HttpClient DefaultClient;
-
 
         public IntegrationTest(ApiWebApplicationFactory fixture)
         {
