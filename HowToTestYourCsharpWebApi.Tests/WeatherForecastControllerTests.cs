@@ -35,7 +35,7 @@ namespace HowToTestYourCsharpWebApi.Tests
         public async Task Get_Should_ResultInABadRequest_When_ConfigIsInvalid()
         {
             // technique like this is used for ad-hoc set up of the test controller, during development
-            var client = VanillaFactory.WithWebHostBuilder(builder =>
+            var client = Factory.WithWebHostBuilder(builder =>
                 {
                     builder.ConfigureServices(services =>
                     {

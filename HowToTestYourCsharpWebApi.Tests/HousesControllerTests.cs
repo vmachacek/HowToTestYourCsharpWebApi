@@ -12,14 +12,14 @@ using Xunit;
 
 namespace HowToTestYourCsharpWebApi.Tests
 {
-    public class CarsControllerTests : IntegrationTest
+    public class HousesControllerTests : IntegrationTest
     {
-        public CarsControllerTests(ApiWebApplicationFactory fixture) : base(fixture)
+        public HousesControllerTests(ApiWebApplicationFactory fixture) : base(fixture)
         {
         }
 
         [Fact]
-        public async Task can_load_all_cars_from_db()
+        public async Task also_test_cars()
         {
             var testScope = Factory.Services.CreateScope();
             var context = testScope.ServiceProvider.GetRequiredService<DatabaseContext>();
@@ -33,6 +33,26 @@ namespace HowToTestYourCsharpWebApi.Tests
             var content = await cars.Content.ReadAsStringAsync();
 
             var list = JsonConvert.DeserializeObject<List<Car>>(content);
+
+            list.Count.ShouldBe(1);
+            list.FirstOrDefault()?.Name.ShouldBe(carName);
+        }
+        
+        [Fact]
+        public async Task should_get_all_houses()
+        {
+            var testScope = Factory.Services.CreateScope();
+            var context = testScope.ServiceProvider.GetRequiredService<DatabaseContext>();
+            var carName = Guid.NewGuid().ToString("D");
+            await context.Houses.AddAsync(new House() {Name = carName});
+            await context.SaveChangesAsync();
+
+            var houses = await this.DefaultClient.GetAsync("/houses");
+            houses.StatusCode.ShouldBe(HttpStatusCode.OK);
+
+            var content = await houses.Content.ReadAsStringAsync();
+
+            var list = JsonConvert.DeserializeObject<List<House>>(content);
 
             list.Count.ShouldBe(1);
             list.FirstOrDefault()?.Name.ShouldBe(carName);

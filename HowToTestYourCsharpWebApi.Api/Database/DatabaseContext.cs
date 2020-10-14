@@ -6,8 +6,11 @@ namespace HowToTestYourCsharpWebApi.Api.Database
     {
         public DbSet<Car> Cars { get; set; }
 
+        public DbSet<House> Houses { get; set; }
+
         public DatabaseContext(DbContextOptions<DatabaseContext> settings) : base(settings)
         {
         }
+        
     }
 }

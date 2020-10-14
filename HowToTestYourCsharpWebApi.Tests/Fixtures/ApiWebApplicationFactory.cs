@@ -1,41 +1,36 @@
 ﻿using System;
-using System.Net.Http;
 using HowToTestYourCsharpWebApi.Api.Database;
-using HowToTestYourCsharpWebApi.Api.Ports;
-using HowToTestYourCsharpWebApi.Tests.Stubs;
+using HowToTestYourCsharpWebApi.Tests.Framework;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace HowToTestYourCsharpWebApi.Tests.Fixtures
 {
-    public class ApiWebApplicationFactory : WebApplicationFactory<Api.Startup>
+    public partial class ApiWebApplicationFactory : WebApplicationFactory<Api.Startup>
     {
         protected override void ConfigureWebHost(IWebHostBuilder builder)
         {
-            builder.ConfigureAppConfiguration(config =>
+            var presets = new RunPreSet[]
             {
-                var integrationConfig = new ConfigurationBuilder()
-                    .AddJsonFile("integrationsettings.json")
-                    .Build();
-
-                config.AddConfiguration(integrationConfig);
-            });
-
-            // is called after the `ConfigureServices` from the Startup
-            builder.ConfigureTestServices(services =>
-            {
-                services.AddTransient<IWeatherForecastConfigService, WeatherForecastConfigStub>();
-                services.AddTransient<IHttpClientFactory, HttpClientFactoryStub>();
-                services.AddEntityFrameworkInMemoryDatabase();
-                services.AddDbContext<DatabaseContext>((options) =>
+                // for local development we stub our APIs and add InmemoryDB
+                //this can be changed per-test basis when we work on certain aspects
+                new RunPreSet("development", developerSetup),
+                
+                //staging should be same as prod
+                new RunPreSet("staging", hostBuilder => { }), 
+                
+                //uat with real DB but stubbed out services
+                new RunPreSet("uat", hostBuilder =>
                 {
-                    options.UseInMemoryDatabase(Guid.NewGuid().ToString("N"));
-                });
-            });
+                    hostBuilder.ConfigureServices(services =>
+                    {
+                        services.WithStubbedOutApis();
+                    });
+                }),
+            };
+            var runSettings = new RunSettingsReader(presets);
+            runSettings.Setup(builder);
         }
     }
 }

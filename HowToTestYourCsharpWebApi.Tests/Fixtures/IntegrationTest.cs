@@ -1,12 +1,5 @@
-﻿using System;
-using Microsoft.Extensions.Configuration;
-using Respawn;
+﻿using Respawn;
 using System.Net.Http;
-using HowToTestYourCsharpWebApi.Api;
-using HowToTestYourCsharpWebApi.Api.Database;
-using HowToTestYourCsharpWebApi.Tests.Stubs;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 
 namespace HowToTestYourCsharpWebApi.Tests.Fixtures
@@ -15,9 +8,9 @@ namespace HowToTestYourCsharpWebApi.Tests.Fixtures
     {
         private readonly Checkpoint _checkpoint = new Checkpoint
         {
-            SchemasToInclude = new[]
+            TablesToIgnore = new[]
             {
-                "Playground"
+                "__EFMigrationsHistory"
             },
             WithReseed = true
         };
@@ -31,7 +24,7 @@ namespace HowToTestYourCsharpWebApi.Tests.Fixtures
         {
             Factory = fixture;
             DefaultClient = fixture.CreateClient();
-            
+
             //if needed, reset the DB
             //_checkpoint.Reset(ConnectionString.It).Wait();
         }

@@ -32,7 +32,7 @@ namespace HowToTestYourCsharpWebApi.Api
         {
             services.AddControllers();
 
-            services.AddDbContext<DatabaseContext>(ctx => { ctx.UseSqlServer(ConnectionString.It); });
+            // services.AddDbContext<DatabaseContext>(ctx => { ctx.UseSqlServer(ConnectionString.It); });
 
             services.AddTransient<IWeatherForecastConfigService, WeatherForecastConfigService>();
 
@@ -60,7 +60,13 @@ namespace HowToTestYourCsharpWebApi.Api
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
 
             using var scope = app.ApplicationServices.CreateScope();
-            scope.ServiceProvider.GetRequiredService<DatabaseContext>().Database.Migrate();
+            {
+                var db = scope.ServiceProvider.GetRequiredService<DatabaseContext>();
+                if (db.Database.ProviderName != "Microsoft.EntityFrameworkCore.InMemory")
+                {
+                    db.Database.Migrate();
+                }
+            }
         }
     }
 }
