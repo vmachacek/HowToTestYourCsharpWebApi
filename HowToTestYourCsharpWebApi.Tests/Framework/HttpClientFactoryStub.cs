@@ -1,7 +1,8 @@
 using System;
 using System.Net.Http;
+using HowToTestYourCsharpWebApi.Tests.Stubs;
 
-namespace HowToTestYourCsharpWebApi.Tests.Stubs
+namespace HowToTestYourCsharpWebApi.Tests.Framework
 {
     //this is place where you define your stubs for HttpClient
     //you can decide which APIs will be faked and which will be real

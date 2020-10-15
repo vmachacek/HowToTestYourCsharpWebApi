@@ -14,6 +14,8 @@ namespace HowToTestYourCsharpWebApi.Tests.Fixtures
         {
             builder.ConfigureServices(services =>
             {
+                //doesnt work because of this
+                //https://github.com/dotnet/aspnetcore/issues/14955
                 services.WithInMemoryDatabase<DatabaseContext>();
                 services.WithStubbedOutApis();
             });
